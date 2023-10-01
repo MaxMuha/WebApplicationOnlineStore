@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Areas.Admin.Controllers
@@ -15,7 +17,20 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var products = productsRepository.GetAll();
-            return View(products);
+            var productsViewModels = new List<ProductViewModel>();
+            foreach (var product in products)
+            {
+                var productViewModel = new ProductViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Cost = product.Cost,
+                    ImgLink = product.ImgLink,
+                };
+                productsViewModels.Add(productViewModel);
+            }
+            return View(productsViewModels);
         }
 
         public IActionResult Create()
@@ -23,11 +38,19 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Create(ProductViewModel product)
         {
             if (ModelState.IsValid)
             {
-                productsRepository.Add(product);
+                var productDb = new Product
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Cost = product.Cost,
+                    ImgLink = product.ImgLink,
+                };
+                productsRepository.Add(productDb);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -39,11 +62,19 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             return View(product);
         }
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(ProductViewModel product)
         {
             if (ModelState.IsValid)
             {
-                productsRepository.Update(product);
+                var productDb = new Product
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Cost = product.Cost,
+                    ImgLink = product.ImgLink,
+                };
+                productsRepository.Update(productDb);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);

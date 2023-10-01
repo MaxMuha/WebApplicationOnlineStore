@@ -2,7 +2,7 @@
 
 namespace WebApplicationOnlineStore.Models
 {
-    public class Product
+    public class ProductViewModel
     {
         public Guid Id { get; set; }
 
@@ -18,11 +18,11 @@ namespace WebApplicationOnlineStore.Models
         [Required(ErrorMessage = "Не указан путь к картинке товара")]
         public string ImgLink { get; set; }
 
-        public Product()
+        public ProductViewModel()
         {
             Id = Guid.NewGuid();
         }
-        public Product(string name, string description, decimal cost, string imgLink) : this()
+        public ProductViewModel(string name, string description, decimal cost, string imgLink) : this()
         {
             Name = name;
             Description = description;

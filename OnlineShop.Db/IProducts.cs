@@ -1,6 +1,6 @@
-﻿using WebApplicationOnlineStore.Models;
+﻿using OnlineShop.Db.Models;
 
-namespace WebApplicationOnlineStore
+namespace OnlineShop.Db
 {
     public interface IProducts
     {

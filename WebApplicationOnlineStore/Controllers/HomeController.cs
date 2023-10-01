@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Controllers
 {
@@ -12,7 +14,20 @@ namespace WebApplicationOnlineStore.Controllers
         public IActionResult Index()
         {
             var products = productsRepository.GetAll();
-            return View(products);
+            var productsViewModels = new List<ProductViewModel>();
+            foreach (var product in products)
+            {
+                var productViewModel = new ProductViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Cost = product.Cost,
+                    ImgLink = product.ImgLink,
+                };
+                productsViewModels.Add(productViewModel);
+            }
+            return View(productsViewModels);
         }
     }
 }
