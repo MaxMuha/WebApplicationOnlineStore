@@ -1,0 +1,44 @@
+﻿@model UserAccount
+
+<div class="container overflow-hidden text-center">
+    <div class="row">
+        <div class="col-2 ps-0">
+            <div>@await Html.PartialAsync("AdminMenu")</div>
+        </div>
+        <div class="col-10 p-0 bg-secondary rounded-4">
+
+            <div class="text-white"><h1>Информация о пользователе</h1></div>
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th scope="col">Имя(Логин)</th>
+                        <th scope="col">Роль</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-group-divider">
+                    <tr>
+                        <td scope="row">@Model.Name</td>
+                        <td scope="row">@Model.Role.Name</td>
+                        <td scope="row">
+                            <div class="btn-group dropstart">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Действия
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="ChangePassword" asp-route-id="@Model.Id">Смена пароля</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id">Редактирование данных</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="EditRights" asp-route-id="@Model.Id">Права доступа</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Remove" asp-route-id="@Model.Id">Удалить пользователя</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

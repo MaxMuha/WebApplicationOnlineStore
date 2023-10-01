@@ -1,0 +1,71 @@
+﻿@model Cart
+@{
+    ViewData["Title"] = "Cart page";
+}
+
+@if (Model == null || Model.Quantity == 0)
+{
+    <div class="bg-secondary rounded-4 p-3 text-center">
+        <div class="text-white"><h1>Корзина пуста</h1></div>
+        <a asp-controller="Home" class="btn btn-sm btn-primary">Выберите товары в главном меню</a>
+    </div>
+}
+else
+{
+    <div class="container overflow-hidden text-center">
+        <div class="row">
+            <div class="col-9 ps-0">
+                <div class="bg-secondary rounded-4 pb-3">
+                    <div class="text-white"><h1>Корзина</h1></div>
+
+                    <table class="table ">
+
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Товар</th>
+                                <th scope="col">Наименование товара</th>
+                                <th scope="col">Количество</th>
+                                <th scope="col">Цена</th>
+                                <th scope="col">Убрать</th>
+                                <th scope="col">Добавить</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="table-group-divider">
+                            @foreach (var cartItem in Model.Items)
+                            {
+                                <tr>
+                                    <th scope="row">@(Model.Items.IndexOf(cartItem) + 1)</th>
+                                    <td><img class="img-fluid rounded-start" alt="Наушники" src="@cartItem.Product.ImgLink" width="50"></td>
+                                    <td>@cartItem.Product.Name</td>
+                                    <td>@cartItem.Quantity</td>
+                                    <td>@cartItem.Amount руб</td>
+                                    <td> <a asp-controller="Cart" asp-action="Remove" asp-route-productId="@cartItem.Product.Id" class="btn btn-primary">-</a></td>
+                                    <td> <a asp-controller="Cart" asp-action="Add" asp-route-productId="@cartItem.Product.Id" class="btn btn-primary">+</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <a asp-controller="Home" class="btn btn-sm btn-primary">Продолжить покупки</a>
+                    <a asp-controller="Cart" asp-action="Clear" asp-route-userId="@Model.UserId" class="btn btn-sm btn-danger">Удалить все товары</a>
+                </div>
+            </div>
+            <div class="col-3 p-0">
+                <div class="bg-secondary rounded-4 text-white p-3">
+                    <h4 class="text-white text-start">Детали корзины</h4>
+                    <dl class="row">
+                        <dt class="col">Товаров</dt>
+                        <dd class="col">@Model.Quantity шт</dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col">Итого</dt>
+                        <dd class="col">@Model.Total руб</dd>
+                    </dl>
+                    <a asp-controller="Order" asp-action="Buy" class="btn btn-success ">Оформить заказ</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

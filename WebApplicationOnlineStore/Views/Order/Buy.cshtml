@@ -1,0 +1,61 @@
+﻿@model DeliveryOrderForm
+
+<div class="bg-secondary rounded-4 p-4">
+    <form method="post" class="row g-3 text-white">
+
+
+        <div asp-validation-summary="ModelOnly" class="text-danger font-weight-bold"></div>
+
+        <div class="col-md-2">
+            <label class="form-label">Имя</label>
+            <input asp-for="FirstName" class="form-control" placeholder="Имя" required>
+            <span asp-validation-for="FirstName"></span>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Фамилия</label>
+            <input asp-for="LastName" class="form-control" placeholder="Фамилия" required>
+            <span asp-validation-for="LastName"></span>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Телефон</label>
+            <input asp-for="Phone" type="tel" class="form-control" placeholder="Телефон" required>
+            <span asp-validation-for="Phone"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" placeholder="Email" required>
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Город</label>
+            <input asp-for="City" class="form-control" placeholder="г.Москва" required>
+            <span asp-validation-for="City"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Область</label>
+            <input asp-for="Region" class="form-control" placeholder="Область" required>
+            <span asp-validation-for="Region"></span>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Адрес</label>
+            <input asp-for="Address" class="form-control" placeholder="Адрес" required>
+            <span asp-validation-for="Address"></span>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Индекс</label>
+            <input asp-for="PostalCode" class="form-control" placeholder="Индекс" required>
+            <span asp-validation-for="PostalCode"></span>
+        </div>
+        <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
+                <label class="form-check-label" for="invalidCheck2">
+                    Примите условия и соглашения
+                </label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button asp-controller="Order" asp-action="Buy" class="btn btn-success" type="submit">Оформить заказ</button>
+        </div>
+    </form>
+</div>
