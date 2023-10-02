@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
         public DeliveryOrderForm Form { get; set; }
-        public List<CartItem> OrderItems { get; set; }
+        public List<CartItemViewModel> OrderItems { get; set; }
         public OrderStatus Status { get; set; }
         public DateTime CreateDateTime { get; set; }
         public Order()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
 using OnlineShop.Db.Models;
+using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Controllers
@@ -21,34 +22,18 @@ namespace WebApplicationOnlineStore.Controllers
         public IActionResult Index()
         {
             var cart = cartsRepository.TryGetByUserId(usersRepository.UserId);
-            return View(cart);
+            return View(Mapping.ToCartViewModel(cart));
         }
         public IActionResult Add(Guid productId)
         {
             var product = productsRepository.TryGetById(productId);
-            var productViewModel = new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Cost = product.Cost,
-                ImgLink = product.ImgLink,
-            };
-            cartsRepository.Add(productViewModel, usersRepository.UserId);
+            cartsRepository.Add(product, usersRepository.UserId);
             return RedirectToAction("Index");
         }
         public IActionResult Remove(Guid productId)
         {
             var product = productsRepository.TryGetById(productId);
-            var productViewModel = new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Cost = product.Cost,
-                ImgLink = product.ImgLink,
-            };
-            cartsRepository.Remove(productViewModel, usersRepository.UserId);
+            cartsRepository.Remove(product, usersRepository.UserId);
             return RedirectToAction("Index");
         }
         public IActionResult Clear(string userId)

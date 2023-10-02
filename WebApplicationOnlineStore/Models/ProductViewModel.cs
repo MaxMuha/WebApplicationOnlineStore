@@ -17,21 +17,5 @@ namespace WebApplicationOnlineStore.Models
 
         [Required(ErrorMessage = "Не указан путь к картинке товара")]
         public string ImgLink { get; set; }
-
-        public ProductViewModel()
-        {
-            Id = Guid.NewGuid();
-        }
-        public ProductViewModel(string name, string description, decimal cost, string imgLink) : this()
-        {
-            Name = name;
-            Description = description;
-            Cost = cost;
-            ImgLink = imgLink;
-        }
-        public override string ToString()
-        {
-            return $"{Id}\n{Name}\n{Cost}";
-        }
     }
 }

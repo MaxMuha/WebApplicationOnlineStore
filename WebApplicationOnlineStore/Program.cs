@@ -23,9 +23,9 @@ builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(c
 
 builder.Services.AddSingleton<IUsers, Constants>();
 
-builder.Services.AddSingleton<ICarts, CartsRepository>();
-
 builder.Services.AddSingleton<IRoles, RolesRepository>();
+
+builder.Services.AddTransient<ICarts, CartsDbRepository>();
 
 builder.Services.AddSingleton<IOrders, OrdersRepository>();
 

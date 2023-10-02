@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using WebApplicationOnlineStore.Helpers;
 
 namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsComponent
 {
     public class CartViewComponent : ViewComponent
     {
         private readonly ICarts cartsRepository;
+
         private readonly IUsers usersRepository;
         public CartViewComponent(ICarts cartsRepository, IUsers usersRepository)
         {
@@ -16,7 +19,9 @@ namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsCompone
         {
             var cart = cartsRepository.TryGetByUserId(usersRepository.UserId);
 
-            var productCounts = cart?.Quantity;
+            var cartViewModel = Mapping.ToCartViewModel(cart);
+
+            var productCounts = cartViewModel?.Quantity ?? 0;
 
             return View("Cart", productCounts);
         }
