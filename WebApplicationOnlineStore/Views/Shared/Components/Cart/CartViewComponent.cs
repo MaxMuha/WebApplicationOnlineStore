@@ -17,9 +17,9 @@ namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsCompone
 
         public IViewComponentResult Invoke()
         {
-            var cart = cartsRepository.TryGetByUserId(usersRepository.UserId);
+            var cartDb = cartsRepository.TryGetByUserId(usersRepository.UserId);
 
-            var cartViewModel = Mapping.ToCartViewModel(cart);
+            var cartViewModel = cartDb.ToCartViewModel();
 
             var productCounts = cartViewModel?.Quantity ?? 0;
 

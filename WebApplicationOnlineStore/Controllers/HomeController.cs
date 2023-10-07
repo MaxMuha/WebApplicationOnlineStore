@@ -15,7 +15,7 @@ namespace WebApplicationOnlineStore.Controllers
         public IActionResult Index()
         {
             var products = productsRepository.GetAll();
-            return View(Mapping.ToProductViewModels(products));
+            return View(products.ToProductViewModels());
         }
     }
 }

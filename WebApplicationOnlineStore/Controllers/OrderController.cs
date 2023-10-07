@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
+using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
@@ -30,21 +31,19 @@ namespace WebApplicationOnlineStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy(DeliveryOrderForm form)
+        public IActionResult Buy(DeliveryOrderFormViewModel form)
         {
             if(ModelState.IsValid)
             {
                 var existingCart = cartsRepository.TryGetByUserId(usersRepository.UserId);
 
-                var existingCartViewModel = Mapping.ToCartViewModel(existingCart);
-
-                var order = new Order
+                var orderDb = new Order
                 {
-                    Form = form,
-                    OrderItems = existingCartViewModel.Items
+                    Form = form.ToDeliveryOrderForm(),
+                    Items = existingCart.Items,
                 };
 
-                ordersRepository.Add(order);
+                ordersRepository.Add(orderDb);
 
                 cartsRepository.Clear(usersRepository.UserId);
 

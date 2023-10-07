@@ -2,8 +2,10 @@
 
 namespace WebApplicationOnlineStore.Models
 {
-    public class DeliveryOrderForm
+    public class DeliveryOrderFormViewModel
     {
+        public Guid Id { get; set; }
+
         [Required(ErrorMessage = "Не указано имя")]
         [StringLength(15, MinimumLength = 2, ErrorMessage = "Имя должно содержать от 2 до 15 символов")]
         public string FirstName { get; set; }

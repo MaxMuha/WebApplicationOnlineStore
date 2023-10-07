@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using OnlineShop.Db.Models;
+using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Areas.Admin.Controllers
@@ -16,16 +19,16 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var orders = ordersRepository.GetAll();
-            return View(orders);
+            return View(orders.ToOrderViewModels());
         }
         public IActionResult Details(Guid orderId)
         {
             var order = ordersRepository.TryGetById(orderId);
-            return View(order);
+            return View(order.ToOrderViewModel());
         }
-        public IActionResult UpdateStatus(Guid orderId, OrderStatus status)
+        public IActionResult UpdateStatus(Guid orderId, OrderStatusViewModels status)
         {
-            ordersRepository.UpdateStatus(orderId, status);
+            ordersRepository.UpdateStatus(orderId, (OrderStatus)(int)status);
             return RedirectToAction(nameof(Index));
         }
     }

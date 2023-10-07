@@ -18,7 +18,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var products = productsRepository.GetAll();
-            return View(Mapping.ToProductViewModels(products));
+            return View(products.ToProductViewModels());
         }
 
         public IActionResult Create()
@@ -30,15 +30,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var productDb = new Product
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Cost = product.Cost,
-                    ImgLink = product.ImgLink,
-                };
-                productsRepository.Add(productDb);
+                productsRepository.Add(product.ToProduct());
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -54,15 +46,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var productDb = new Product
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Cost = product.Cost,
-                    ImgLink = product.ImgLink,
-                };
-                productsRepository.Update(productDb);
+                productsRepository.Update(product.ToProduct());
                 return RedirectToAction(nameof(Index));
             }
             return View(product);

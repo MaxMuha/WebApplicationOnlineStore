@@ -27,7 +27,7 @@ builder.Services.AddSingleton<IRoles, RolesRepository>();
 
 builder.Services.AddTransient<ICarts, CartsDbRepository>();
 
-builder.Services.AddSingleton<IOrders, OrdersRepository>();
+builder.Services.AddTransient<IOrders, OrdersDbRepository>();
 
 builder.Services.AddSingleton<IUserManager, UserManager>();
 

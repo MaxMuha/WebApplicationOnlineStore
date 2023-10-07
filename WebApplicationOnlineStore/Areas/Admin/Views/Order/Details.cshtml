@@ -1,4 +1,4 @@
-﻿@model Order
+﻿@model OrderViewModel
 @{
     ViewData["Title"] = "Order Page";
 }
@@ -27,7 +27,7 @@
                             <tbody class="table-group-divider">
                                 <tr>
                                     <th scope="row">Дата и время</th>
-                                    <td>@Model.CreateDateTime.Date</td>
+                                    <td>@Model.CreateDateTime</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Адресс доставки</th>
@@ -57,7 +57,7 @@
                                     <th scope="row">Статус заказа</th>
                                     <td>
                                         <select asp-for="@Model.Status"
-                                                asp-items="@Html.GetEnumSelectList<OrderStatus>()"
+                                                asp-items="@Html.GetEnumSelectList<OrderStatusViewModels>()"
                                                 class="form-control">
                                         </select>
                                     </td>
