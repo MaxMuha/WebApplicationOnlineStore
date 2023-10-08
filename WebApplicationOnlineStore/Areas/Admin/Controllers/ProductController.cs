@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
-using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
@@ -39,7 +38,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         public IActionResult Edit(Guid productId)
         {
             var product = productsRepository.TryGetById(productId);
-            return View(product);
+            return View(product.ToProductViewModel());
         }
         [HttpPost]
         public IActionResult Edit(ProductViewModel product)

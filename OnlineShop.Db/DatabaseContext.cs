@@ -6,6 +6,7 @@ namespace OnlineShop.Db
     public class DatabaseContext : DbContext
     {
         //Доступ к таблицам
+        public DbSet<WatchList> WatchLists { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
