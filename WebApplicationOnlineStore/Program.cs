@@ -1,12 +1,11 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using OnlineShop.Db;
+using OnlineShop.Db.Models;
 using Serilog;
 using System.Globalization;
 using WebApplicationOnlineStore;
-using WebApplicationOnlineStore.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,21 @@ string connection = builder.Configuration.GetConnectionString("online_shop");
 // ƒобавл€ем контекст DatabaseContext в качестве сервиса в приложение
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connection));
 
-builder.Services.AddSingleton<IUsers, Constants>();
+builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlServer(connection));
+
+builder.Services.AddIdentity<User, IdentityRole>() // указываю тип пользовател€ и роль
+    .AddEntityFrameworkStores<IdentityContext>();  // устанавливаю тип хранилища данных
+// настройки куки
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromHours(5);
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.Cookie = new CookieBuilder
+    {
+        IsEssential = true
+    };
+});
 
 builder.Services.AddSingleton<IRoles, RolesRepository>();
 
@@ -66,7 +79,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication(); // подключение аутентификации
+
+app.UseAuthorization(); //подключение авторизации
 
 app.UseRequestLocalization();
 
@@ -77,5 +92,13 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var serviceScope = app.Services.CreateScope())
+{
+    var services = serviceScope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    IdentityInitializer.Initialize(userManager, rolesManager);
+}
 
 app.Run();

@@ -7,17 +7,14 @@ namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsCompone
     public class CartViewComponent : ViewComponent
     {
         private readonly ICarts cartsRepository;
-
-        private readonly IUsers usersRepository;
-        public CartViewComponent(ICarts cartsRepository, IUsers usersRepository)
+        public CartViewComponent(ICarts cartsRepository)
         {
             this.cartsRepository = cartsRepository;
-            this.usersRepository = usersRepository;
         }
 
         public IViewComponentResult Invoke()
         {
-            var cartDb = cartsRepository.TryGetByUserId(usersRepository.UserId);
+            var cartDb = cartsRepository.TryGetByUserId(Constants.UserId);
 
             var cartViewModel = cartDb.ToCartViewModel();
 

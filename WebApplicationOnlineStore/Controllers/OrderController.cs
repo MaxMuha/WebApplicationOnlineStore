@@ -10,13 +10,10 @@ namespace WebApplicationOnlineStore.Controllers
     {
         private readonly ICarts cartsRepository;
 
-        private readonly IUsers usersRepository;
-
         private readonly IOrders ordersRepository;
-        public OrderController(ICarts cartsRepository, IUsers usersRepository, IOrders ordersRepository)
+        public OrderController(ICarts cartsRepository, IOrders ordersRepository)
         {
             this.cartsRepository = cartsRepository;
-            this.usersRepository = usersRepository;
             this.ordersRepository = ordersRepository;
         }
 
@@ -35,7 +32,7 @@ namespace WebApplicationOnlineStore.Controllers
         {
             if(ModelState.IsValid)
             {
-                var existingCart = cartsRepository.TryGetByUserId(usersRepository.UserId);
+                var existingCart = cartsRepository.TryGetByUserId(Constants.UserId);
 
                 var orderDb = new Order
                 {
@@ -45,7 +42,7 @@ namespace WebApplicationOnlineStore.Controllers
 
                 ordersRepository.Add(orderDb);
 
-                cartsRepository.Clear(usersRepository.UserId);
+                cartsRepository.Clear(Constants.UserId);
 
                 return RedirectToAction(nameof(Index));
             }

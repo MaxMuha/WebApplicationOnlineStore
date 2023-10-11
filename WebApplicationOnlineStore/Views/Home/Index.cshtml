@@ -53,7 +53,7 @@
                 <div class="card-img-overlay text-white">
                     <div class="pt-5">
                         <a asp-controller="Product" asp-action="Index" asp-route-id="@product.Id" class="card-title"><h5>@product.Name</h5></a>
-                        <p class="card-text>@product.Cost руб</p>
+                        <p class="card-text">@product.Cost руб</p>
                         <div class="d-grid hstack gap-4 d-md-block mx-auto clearfix text-center">
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                 <a asp-controller="Cart" asp-action="Add" asp-route-productId="@product.Id" class="btn btn-sm btn-success">В корзину</a>
