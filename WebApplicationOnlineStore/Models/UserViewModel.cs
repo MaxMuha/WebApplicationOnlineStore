@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Hosting;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApplicationOnlineStore.Models
 {
-    public class UserAccount
+    public class UserViewModel
     {
         public Guid Id { get; set; }
 

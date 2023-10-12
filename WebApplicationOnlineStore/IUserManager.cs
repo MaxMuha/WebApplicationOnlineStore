@@ -4,13 +4,13 @@ namespace WebApplicationOnlineStore
 {
     public interface IUserManager
     {
-        void Add(UserAccount user);
+        void Add(UserViewModel user);
         void ChangePassword(Guid id, string newPassword);
-        List<UserAccount> GetAll();
-        void Remove(UserAccount userAccount);
-        UserAccount TryGetById(Guid id);
-        UserAccount TryGetByName(string userName);
-        void Update(UserAccount user);
+        List<UserViewModel> GetAll();
+        void Remove(UserViewModel userAccount);
+        UserViewModel TryGetById(Guid id);
+        UserViewModel TryGetByName(string userName);
+        void Update(UserViewModel user);
         void UpdateRole(Guid id, Role role);
     }
 }

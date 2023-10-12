@@ -4,24 +4,24 @@ namespace WebApplicationOnlineStore
 {
     public class UserManager : IUserManager
     {
-        private readonly List<UserAccount> users = new List<UserAccount>();
-        public List<UserAccount> GetAll()
+        private readonly List<UserViewModel> users = new List<UserViewModel>();
+        public List<UserViewModel> GetAll()
         {
             return users;
         }
-        public void Add(UserAccount user)
+        public void Add(UserViewModel user)
         {
             users.Add(user);
         }
-        public UserAccount TryGetById(Guid id)
+        public UserViewModel TryGetById(Guid id)
         {
             return users.FirstOrDefault(x => x.Id == id);
         }
-        public UserAccount TryGetByName(string name)
+        public UserViewModel TryGetByName(string name)
         {
             return users.FirstOrDefault(x => x.Name == name);
         }
-        public void Update(UserAccount user)
+        public void Update(UserViewModel user)
         {
             var existingAccount = users.FirstOrDefault(x => x.Id == user.Id);
             if (existingAccount == null)
@@ -35,7 +35,7 @@ namespace WebApplicationOnlineStore
             var userAccount = TryGetById(id);
             userAccount.Password = newPassword;
         }
-        public void Remove(UserAccount userAccount)
+        public void Remove(UserViewModel userAccount)
         {
             users.Remove(userAccount);
         }

@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using OnlineShop.Db;
+using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Areas.Admin.Models;
+using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Areas.Admin.Controllers
@@ -10,17 +14,19 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class UserController : Controller
     {
-        private readonly IUserManager userManager;
+        private readonly UserManager<User> userManager;
 
-        public UserController(IUserManager userManager)
+        private readonly SignInManager<User> signInManager;
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         public IActionResult Index()
         {
-            var userAccounts = userManager.GetAll();
-            return View(userAccounts);
+            var users = userManager.Users.ToList();
+            return View(users.Select(x => x.ToUserViewModel()).ToList());
         }
 
         public IActionResult Create()
@@ -29,36 +35,46 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Register user)
+        public IActionResult Create(Register register)
         {
+            if (register.UserName == register.Password)
+            {
+                ModelState.AddModelError("", "Логин и пароль не должны совпадать!");
+            }
+
             if (ModelState.IsValid)
             {
-                userManager.Add(new UserAccount
+                var user = new User { Email = register.UserName, UserName = register.UserName };
+                //добавил пользователя
+                var result = userManager.CreateAsync(user, register.Password).Result;
+                if (result.Succeeded)
                 {
-                    Id = user.Id,
-                    Name = user.UserName,
-                    Password = user.Password,
-                    Role = user.Role,
-                });
-                return RedirectToAction(nameof(Index));
+                    //установка куки
+                    signInManager.SignInAsync(user, false).Wait();
+                    return Redirect(register.ReturnUrl ?? "/Admin/Home");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
-            return View(user);
+            return View(register);
         }
 
-        public IActionResult Details(Guid id)
+        public IActionResult Details(string name)
         {
-            var userAccount = userManager.TryGetById(id);
-            return View(userAccount);
+            var user = userManager.FindByNameAsync(name).Result;
+            return View(user.ToUserViewModel());
         }
 
-        public IActionResult ChangePassword(Guid id)
+        public IActionResult ChangePassword(string name)
         {
-            var userAccount = userManager.TryGetById(id);
-
             var changePassword = new ChangePassword()
             {
-                Id = id,
-                UserName = userAccount.Name
+                UserName = name
             };
 
             return View(changePassword);
@@ -74,50 +90,55 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                userManager.ChangePassword(changePassword.Id, changePassword.Password);
+                var user = userManager.FindByNameAsync(changePassword.UserName).Result;
+                var newHashPassword = userManager.PasswordHasher.HashPassword(user, changePassword.Password);
+                user.PasswordHash = newHashPassword;
+                userManager.UpdateAsync(user).Wait();
                 return RedirectToAction(nameof(Index));
             }
             return View(nameof(ChangePassword));
         }
 
-        public IActionResult Edit(Guid id)
+        public IActionResult Edit(string name)
         {
-            var userAccount = userManager.TryGetById(id);
-            return View(userAccount);
+            var user = userManager.FindByNameAsync(name).Result;
+            return View(user);
         }
         [HttpPost]
-        public IActionResult Edit(UserAccount userAccount)
+        public IActionResult Edit(UserViewModel user)
         {
             if (ModelState.IsValid)
             {
-                userManager.Update(userAccount);
+                userManager.UpdateAsync(user.ToUser()).Wait();
                 return RedirectToAction(nameof(Index));
             }
-            return View(userAccount);
+            return View(user);
         }
 
-        public IActionResult Remove(Guid id)
+        public IActionResult Remove(string name)
         {
-            var userAccount = userManager.TryGetById(id);
-            userManager.Remove(userAccount);
+            var user = userManager.FindByNameAsync(name).Result;
+            userManager.DeleteAsync(user).Wait();
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult EditRights(Guid id)
+        public IActionResult EditRights(string name)
         {
-            var userAccount = userManager.TryGetById(id);
-            return View(userAccount);
+            var user = userManager.FindByNameAsync(name).Result;
+            return View(user);
         }
 
         [HttpPost]
-        public IActionResult EditRights(Guid id, Role role)
+        public IActionResult EditRights(string name, string role)
         {
             if (ModelState.IsValid)
             {
-                userManager.UpdateRole(id, role);
+                var user = userManager.FindByNameAsync(name).Result;
+                userManager.RemoveFromRoleAsync(user, role).Wait();
+                userManager.AddToRoleAsync(user, role).Wait();
                 return RedirectToAction(nameof(Index));
             }
-            return View(id);
+            return View(name);
         }
     }
 }

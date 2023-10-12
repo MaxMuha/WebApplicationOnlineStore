@@ -1,4 +1,4 @@
-﻿@model UserAccount
+﻿@model UserViewModel
 
 
 <form method="post">
@@ -15,8 +15,8 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger font-weight-bold"></div>
 
-                        <input type="hidden" asp-for="Id" value="@Model?.Id" />
-                        <span asp-validation-for="Id"></span>
+                        <input type="hidden" asp-for="Name" value="@Model?.Name" />
+                        <span asp-validation-for="Name"></span>
 
                         <div>
                             <input asp-for="Role.Name" value="@Model?.Role.Name" />

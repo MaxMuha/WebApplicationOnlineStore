@@ -1,4 +1,5 @@
-﻿using OnlineShop.Db.Models;
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Helpers
@@ -117,6 +118,22 @@ namespace WebApplicationOnlineStore.Helpers
                 orderViewModels.Add(ToOrderViewModel(order));
             }
             return orderViewModels;
+        }
+
+        public static UserViewModel ToUserViewModel(this User user)
+        {
+            return new UserViewModel
+            {
+                Name = user.UserName,
+            };
+        }
+
+        public static User ToUser(this UserViewModel user)
+        {
+            return new User
+            {
+                UserName = user.Name,
+            };
         }
     }
 }

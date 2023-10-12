@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db.Models;
-using Serilog;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Controllers
@@ -19,7 +18,7 @@ namespace WebApplicationOnlineStore.Controllers
 
         public IActionResult Login(string returnUrl)
         {
-            return View(new Login() { ReturnUrl  = returnUrl });
+            return View(new Login() { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -39,7 +38,7 @@ namespace WebApplicationOnlineStore.Controllers
                 }
             }
 
-            return View(nameof(Login));
+            return View(login);
         }
 
         public IActionResult Register(string returnUrl)
@@ -73,9 +72,14 @@ namespace WebApplicationOnlineStore.Controllers
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-                return Redirect(register.ReturnUrl);
             }
-            return View(nameof(Register));
+            return View(register);
+        }
+
+        public IActionResult Logout()
+        {
+            signInManager.SignOutAsync().Wait();
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }
