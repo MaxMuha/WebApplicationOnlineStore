@@ -11,6 +11,6 @@ namespace WebApplicationOnlineStore
         UserViewModel TryGetById(Guid id);
         UserViewModel TryGetByName(string userName);
         void Update(UserViewModel user);
-        void UpdateRole(Guid id, Role role);
+        void UpdateRole(Guid id, RoleViewModel role);
     }
 }

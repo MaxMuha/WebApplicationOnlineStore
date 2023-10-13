@@ -16,7 +16,6 @@
                         <th scope="col">#</th>
                         <th scope="col">Имя(логин)</th>
                         <th scope="col">Роль</th>
-                        <th scope="col">Телефон</th>
                         <th scope="col"><a asp-area="Admin" asp-controller="User" asp-action="Create" class="btn btn-sm btn-success">Добавить нового пользователя</a></th>
                     </tr>
                 </thead>
@@ -27,9 +26,9 @@
                         <tr>
                             <th scope="row">@(Model.IndexOf(user) + 1)</th>
                             <td>@user.Name</td>
-                            <td>@user.Role.Name</td>
+                            <td>@user.Role</td>
                             <td></td>
-                            <td><a asp-area="Admin" asp-controller="User" asp-action="Details" asp-route-id="@user.Id" class="btn btn-primary">Изменить</a></td>
+                            <td><a asp-area="Admin" asp-controller="User" asp-action="Details" asp-route-name="@user.Name" class="btn btn-primary">Изменить</a></td>
                         </tr>
                     }
                 </tbody>

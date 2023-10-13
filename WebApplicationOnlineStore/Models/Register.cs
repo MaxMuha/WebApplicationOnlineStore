@@ -15,12 +15,12 @@ namespace WebApplicationOnlineStore.Models
         [Required(ErrorMessage = "Не указано подтверждение пароля")]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string ConfirmPassword { get; set; }
-        public string ReturnUrl { get; set; }
-        public Role Role { get; set; }
+        public string? ReturnUrl { get; set; }
+        public RoleViewModel Role { get; set; }
         public Register()
         {
             Id = Guid.NewGuid();
-            Role = new Role() { Name = "User" };
+            Role = new RoleViewModel() { Name = "User" };
         }
     }
 }

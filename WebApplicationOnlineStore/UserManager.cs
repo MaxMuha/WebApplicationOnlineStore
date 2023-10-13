@@ -39,7 +39,7 @@ namespace WebApplicationOnlineStore
         {
             users.Remove(userAccount);
         }
-        public void UpdateRole(Guid id, Role role)
+        public void UpdateRole(Guid id, RoleViewModel role)
         {
             var userAccount = TryGetById(id);
             userAccount.Role = role;

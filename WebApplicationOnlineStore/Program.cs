@@ -36,8 +36,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
-builder.Services.AddSingleton<IRoles, RolesRepository>();
-
 builder.Services.AddTransient<ICarts, CartsDbRepository>();
 
 builder.Services.AddSingleton<IUserManager, UserManager>();

@@ -15,6 +15,6 @@ namespace WebApplicationOnlineStore.Models
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Роль не указанна")]
-        public Role Role { get; set; }
+        public RoleViewModel Role { get; set; }
     }
 }

@@ -14,13 +14,16 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class UserController : Controller
     {
+        private readonly RoleManager<IdentityRole> rolesManager;
+
         private readonly UserManager<User> userManager;
 
         private readonly SignInManager<User> signInManager;
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> rolesManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.rolesManager = rolesManager;
         }
 
         public IActionResult Index()
@@ -102,7 +105,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         public IActionResult Edit(string name)
         {
             var user = userManager.FindByNameAsync(name).Result;
-            return View(user);
+            return View(user.ToUserViewModel());
         }
         [HttpPost]
         public IActionResult Edit(UserViewModel user)
@@ -122,23 +125,29 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public IActionResult EditRights(string name, Dictionary<string, string> userRolesViewModel)
+        {
+            var userSelectdRoles = userRolesViewModel.Select(x => x.Key);
+            var user = userManager.FindByNameAsync(name).Result;
+            var userRoles = userManager.GetRolesAsync(user).Result;
+            userManager.RemoveFromRolesAsync(user, userRoles).Wait();
+            userManager.AddToRolesAsync(user, userSelectdRoles).Wait();
+            return RedirectToAction("EditRights", name);
+        }
+
         public IActionResult EditRights(string name)
         {
             var user = userManager.FindByNameAsync(name).Result;
-            return View(user);
-        }
-
-        [HttpPost]
-        public IActionResult EditRights(string name, string role)
-        {
-            if (ModelState.IsValid)
+            var userRoles = userManager.GetRolesAsync(user).Result;
+            var roles = rolesManager.Roles.ToList();
+            var model = new EditRightsViewModel
             {
-                var user = userManager.FindByNameAsync(name).Result;
-                userManager.RemoveFromRoleAsync(user, role).Wait();
-                userManager.AddToRoleAsync(user, role).Wait();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(name);
+                UserName = user.UserName,
+                UserRoles = userRoles.Select(role => new RoleViewModel { Name = role }).ToList(),
+                AllRoles = roles.Select(role => new RoleViewModel { Name = role.Name }).ToList()
+            };
+            return View(model);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using OnlineShop.Db;
 using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Models;
 
@@ -133,6 +135,24 @@ namespace WebApplicationOnlineStore.Helpers
             return new User
             {
                 UserName = user.Name,
+            };
+        }
+
+        public static List<RoleViewModel> ToRoleViewModels(this List<IdentityRole> roles)
+        {
+            var rolesViewModels = new List<RoleViewModel>();
+            foreach (var role in roles)
+            {
+                rolesViewModels.Add(ToRoleViewModel(role));
+            }
+            return rolesViewModels;
+        }
+
+        public static RoleViewModel ToRoleViewModel(this IdentityRole role)
+        {
+            return new RoleViewModel
+            {
+                Name = role.Name
             };
         }
     }
