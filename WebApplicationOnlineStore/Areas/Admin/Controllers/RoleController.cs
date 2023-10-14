@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
 using System.Data;
+using WebApplicationOnlineStore.Areas.Admin.Models;
 using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 

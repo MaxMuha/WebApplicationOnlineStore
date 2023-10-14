@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
 using OnlineShop.Db;
 using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Areas.Admin.Models;
@@ -125,17 +124,6 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public IActionResult EditRights(string name, Dictionary<string, string> userRolesViewModel)
-        {
-            var userSelectdRoles = userRolesViewModel.Select(x => x.Key);
-            var user = userManager.FindByNameAsync(name).Result;
-            var userRoles = userManager.GetRolesAsync(user).Result;
-            userManager.RemoveFromRolesAsync(user, userRoles).Wait();
-            userManager.AddToRolesAsync(user, userSelectdRoles).Wait();
-            return RedirectToAction("EditRights", name);
-        }
-
         public IActionResult EditRights(string name)
         {
             var user = userManager.FindByNameAsync(name).Result;
@@ -148,6 +136,17 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
                 AllRoles = roles.Select(role => new RoleViewModel { Name = role.Name }).ToList()
             };
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EditRights(string name, Dictionary<string, string> userRolesViewModel)
+        {
+            var userSelectdRoles = userRolesViewModel.Select(x => x.Key);
+            var user = userManager.FindByNameAsync(name).Result;
+            var userRoles = userManager.GetRolesAsync(user).Result;
+            userManager.RemoveFromRolesAsync(user, userRoles).Wait();
+            userManager.AddToRolesAsync(user, userSelectdRoles).Wait();
+            return RedirectToAction("Details", new { name });
         }
     }
 }

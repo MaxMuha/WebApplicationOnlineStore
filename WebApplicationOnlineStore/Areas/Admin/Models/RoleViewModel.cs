@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplicationOnlineStore.Models
+namespace WebApplicationOnlineStore.Areas.Admin.Models
 {
     public class RoleViewModel
     {

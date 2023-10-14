@@ -86,7 +86,7 @@ namespace WebApplicationOnlineStore.Controllers
             }
             catch
             {
-                //Log
+                //log
             }
         }
 

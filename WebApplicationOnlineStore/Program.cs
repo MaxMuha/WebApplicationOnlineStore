@@ -38,8 +38,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddTransient<ICarts, CartsDbRepository>();
 
-builder.Services.AddSingleton<IUserManager, UserManager>();
-
 builder.Services.AddTransient<IOrders, OrdersDbRepository>();
 
 builder.Services.AddTransient<IProducts, ProductsDbRepository>();

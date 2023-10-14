@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Identity;
-using OnlineShop.Db;
+﻿using Microsoft.AspNetCore.Identity;
 using OnlineShop.Db.Models;
+using WebApplicationOnlineStore.Areas.Admin.Models;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Helpers
@@ -127,6 +126,7 @@ namespace WebApplicationOnlineStore.Helpers
             return new UserViewModel
             {
                 Name = user.UserName,
+                Password = user.PasswordHash
             };
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApplicationOnlineStore.Areas.Admin.Models;
 
 namespace WebApplicationOnlineStore.Models
 {
