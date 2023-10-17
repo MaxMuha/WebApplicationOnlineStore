@@ -10,19 +10,19 @@ namespace OnlineShop.Db.Models
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Cost { get; set; }
-        public string ImgLink { get; set; }
         public List<CartItem> Items { get; set; }
-        public Product()
+        public List<Image> Images { get; set; }
+        public Product(Guid id, string name, string description, decimal cost) : this()
         {
-            Items = new List<CartItem>();
-        }
-        public Product(string name, string description, decimal cost, string imgLink)
-        {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             Description = description;
             Cost = cost;
-            ImgLink = imgLink;
+        }
+        public Product()
+        {
+            Items = new List<CartItem>();
+            Images = new List<Image>();
         }
     }
 }

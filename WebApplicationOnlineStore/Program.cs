@@ -6,6 +6,7 @@ using OnlineShop.Db.Models;
 using Serilog;
 using System.Globalization;
 using WebApplicationOnlineStore;
+using WebApplicationOnlineStore.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,8 @@ builder.Services.ConfigureApplicationCookie(options =>
         IsEssential = true
     };
 });
+
+builder.Services.AddScoped<ImagesProvider>();
 
 builder.Services.AddTransient<ICarts, CartsDbRepository>();
 

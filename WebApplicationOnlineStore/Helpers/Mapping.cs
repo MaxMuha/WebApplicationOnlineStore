@@ -25,20 +25,65 @@ namespace WebApplicationOnlineStore.Helpers
                 Name = product.Name,
                 Description = product.Description,
                 Cost = product.Cost,
-                ImgLink = product.ImgLink,
+                ImagesPaths = product.Images.Select(x => x.Url).ToArray()
             };
         }
 
-        public static Product ToProduct(this ProductViewModel product)
+        public static Product ToProduct(this ProductViewModel productViewModel)
         {
             return new Product
+            {
+                Id = productViewModel.Id,
+                Name = productViewModel.Name,
+                Description = productViewModel.Description,
+                Cost = productViewModel.Cost,
+                //Images = ToImages(imagesPaths)
+            };
+        }
+
+        public static Product ToProduct(this CreateProductViewModel createProductViewModel, List<string> imagesPaths)
+        {
+            return new Product
+            {
+                Name = createProductViewModel.Name,
+                Description = createProductViewModel.Description,
+                Cost = createProductViewModel.Cost,
+                Images = ToImages(imagesPaths)
+            };
+        }
+
+        public static EditProductViewModel ToEditProductViewModel(this Product product)
+        {
+            return new EditProductViewModel
             {
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
                 Cost = product.Cost,
-                ImgLink = product.ImgLink,
+                ImagesPaths = product.Images.ToPaths()
             };
+        }
+
+        public static Product ToProduct(this EditProductViewModel editProduct)
+        {
+            return new Product
+            {
+                Id = editProduct.Id,
+                Name = editProduct.Name,
+                Description = editProduct.Description,
+                Cost = editProduct.Cost,
+                Images = editProduct.ImagesPaths.ToImages()
+            };
+        }
+
+        public static List<Image> ToImages(this List<string> paths)
+        {
+            return paths.Select(x => new Image { Url = x }).ToList();
+        }
+
+        public static List<string> ToPaths(this List<Image> paths)
+        {
+            return paths.Select(x => x.Url).ToList();
         }
 
         public static List<CartItemViewModel> ToCarItemViewModels(this List<CartItem> cartDbItems)

@@ -1,4 +1,5 @@
-﻿using OnlineShop.Db.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineShop.Db.Models;
 
 namespace OnlineShop.Db
 {
@@ -11,22 +12,14 @@ namespace OnlineShop.Db
             this.databaseContext = databaseContext;
         }
 
-        //private List<Product> products = new List<Product>()
-        //{
-        //    new Product ("Колонка","Никаких проводов. Никаких сложностей. Чистая магия.",1590, "/image/Prod/audiobox.png"),
-        //    new Product ("Наушники","Пространственное аудио и функция динамического отслеживания движений головы",1990 , "/image/Prod/headphones.png"),
-        //    new Product ("Ноутбук","Активное шумоподавление и Прозрачный режим",2550, "/image/Prod/laptop.png"),
-        //    new Product ("Часы","До 20 часов прослушивания аудио без подзарядки",5900, "/image/Prod/watch.png"),
-        //};
-
-        public List<Product> GetAll() 
+        public List<Product> GetAll()
         {
-            return databaseContext.Products.ToList();
+            return databaseContext.Products.Include(x => x.Images).ToList();
         }
 
         public Product TryGetById(Guid id)
         {
-            return databaseContext.Products.FirstOrDefault(product => product.Id == id);
+            return databaseContext.Products.Include(x => x.Images).FirstOrDefault(product => product.Id == id);
         }
 
         public void Add(Product product)
@@ -37,7 +30,7 @@ namespace OnlineShop.Db
 
         public void Update(Product product)
         {
-            var existingProduct = databaseContext.Products.FirstOrDefault(x => x.Id == product.Id);
+            var existingProduct = databaseContext.Products.Include(x => x.Images).FirstOrDefault(x => x.Id == product.Id);
             if (existingProduct == null)
             {
                 return;
@@ -45,7 +38,12 @@ namespace OnlineShop.Db
             existingProduct.Name = product.Name;
             existingProduct.Description = product.Description;
             existingProduct.Cost = product.Cost;
-            existingProduct.ImgLink = product.ImgLink;
+
+            foreach (var image in product.Images)
+            {
+                image.ProductId = product.Id;
+                databaseContext.Images.Add(image);
+            }
             databaseContext.SaveChanges();
         }
 

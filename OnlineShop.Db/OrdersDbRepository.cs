@@ -25,7 +25,6 @@ namespace OnlineShop.Db
         public Order TryGetById(Guid orderId)
         {
             return databaseContext.Orders.Include(x => x.Form).Include(x => x.Items).ThenInclude(x => x.Product).FirstOrDefault(o => o.Id == orderId);
-            //return databaseContext.Orders.FirstOrDefault(o => o.Id == orderId);
         }
 
         public void UpdateStatus(Guid orderId, OrderStatus newStatus)

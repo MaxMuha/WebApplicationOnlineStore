@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApplicationOnlineStore.Models;
 
-namespace WebApplicationOnlineStore.Models
+namespace WebApplicationOnlineStore.Areas.Admin.Models
 {
-    public class ProductViewModel
+    public class EditProductViewModel
     {
         public Guid Id { get; set; }
 
@@ -13,11 +14,10 @@ namespace WebApplicationOnlineStore.Models
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Не указанна цена товара")]
+        [Range(1, 200000, ErrorMessage = "Цена должна быть от 1 до 200 000 тыс.")]
         public decimal Cost { get; set; }
 
-        [Required(ErrorMessage = "Не указан путь к картинке товара")]
-        public string[] ImagesPaths { get; set; }
-
-        public string ImagePath => ImagesPaths.Length == 0 ? "/images/Products/watch.png" : ImagesPaths[0];
+        public List<string> ImagesPaths { get; set; }
+        public IFormFile[] UploadedFiles { get; set; }
     }
 }
