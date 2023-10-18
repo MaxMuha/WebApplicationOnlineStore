@@ -51,9 +51,9 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
                 var result = userManager.CreateAsync(user, register.Password).Result;
                 if (result.Succeeded)
                 {
-                    //установка куки
-                    signInManager.SignInAsync(user, false).Wait();
-                    return Redirect(register.ReturnUrl ?? "/Admin/Home");
+                    //signInManager.SignInAsync(user, false).Wait();
+                    TryAssignUserRole(user);
+                    return Redirect(register.ReturnUrl ?? "/Admin/User");
                 }
                 else
                 {
@@ -64,6 +64,18 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
                 }
             }
             return View(register);
+        }
+
+        public void TryAssignUserRole(User user)
+        {
+            try
+            {
+                userManager.AddToRoleAsync(user, Constants.UserRoleName).Wait();
+            }
+            catch
+            {
+                //log
+            }
         }
 
         public IActionResult Details(string name)

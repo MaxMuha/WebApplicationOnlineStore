@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
 using OnlineShop.Db.Models;
+using System.Linq;
+using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Controllers
@@ -15,6 +17,12 @@ namespace WebApplicationOnlineStore.Controllers
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+        }
+
+        public IActionResult Index(string name)
+        {
+            var user = userManager.FindByNameAsync(name).Result;
+            return View(user.ToUserViewModel());
         }
 
         public IActionResult Login(string returnUrl)
@@ -35,7 +43,7 @@ namespace WebApplicationOnlineStore.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправельный пароль!");
+                    ModelState.AddModelError("", "Неправильный пароль!");
                 }
             }
 
