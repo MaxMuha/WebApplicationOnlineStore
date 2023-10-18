@@ -1,50 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using OnlineShop.Db.Models;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserManager usersManager;
+        private readonly UserManager<User> userManager;
 
-        public AccountController(IUserManager usersManager)
+        private readonly SignInManager<User> signInManager;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            this.usersManager = usersManager;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
-            return View();
+            return View(new Login() { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
         public IActionResult Login(Login login)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(nameof(Login));
+                var result = signInManager.PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, false).Result;
+
+                if (result.Succeeded)
+                {
+                    return Redirect(login.ReturnUrl ?? "/Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Неправельный пароль!");
+                }
             }
 
-            var userAccount = usersManager.TryGetByName(login.UserName);
-
-            if (userAccount == null)
-            {
-                ModelState.AddModelError("", "Такого пользователя не существует!");
-                return View(nameof(Login));
-            }
-
-            if (userAccount.Password != login.Password)
-            {
-                ModelState.AddModelError("", "Неправельный пароль!");
-                return View(nameof(Login));
-            }
-
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return View(login);
         }
 
-        public IActionResult Register()
+        public IActionResult Register(string returnUrl)
         {
-            return View();
+            return View(new Register() { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -57,16 +57,43 @@ namespace WebApplicationOnlineStore.Controllers
 
             if (ModelState.IsValid)
             {
-                usersManager.Add(new UserAccount
+                var user = new User { Email = register.UserName,  UserName = register.UserName };
+                //добавил пользователя
+                var result = userManager.CreateAsync(user, register.Password).Result;
+                if (result.Succeeded)
                 {
-                    Name = register.UserName,
-                    Password = register.Password,
-                    Role = register.Role,
-                    Id = register.Id
-                });
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                    //установка куки
+                    signInManager.SignInAsync(user, false).Wait();
+                    TryAssignUserRole(user);
+                    return Redirect(register.ReturnUrl ?? "/Home");
+                }
+                else
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
-            return View(nameof(Register));
+            return View(register);
+        }
+
+        public void TryAssignUserRole(User user)
+        {
+            try
+            {
+                userManager.AddToRoleAsync(user, Constants.UserRoleName).Wait();
+            }
+            catch
+            {
+                //log
+            }
+        }
+
+        public IActionResult Logout()
+        {
+            signInManager.SignOutAsync().Wait();
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }

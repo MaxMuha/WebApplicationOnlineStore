@@ -1,12 +1,12 @@
-﻿@model Product
+﻿@model ProductViewModel
 @{
     ViewData["Title"] = "Product page";
 }
 <div class="row g-0 rounded-4 bg-secondary text-white">
     <div class="col-md-4">
-        <img class="img-fluid rounded-start" alt="Наушники" src="@Model.ImgLink" width="300">
+        <img class="img-fluid rounded-start" alt="Наушники" src="@Model.ImagePath" width="300">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8 pt-5">
         <div class="card-body">
 
             <h5 class="card-title">@Model.Name</h5>
@@ -14,10 +14,13 @@
             <p class="card-text">@Model.Cost руб</p>
 
             <p class="card-text">@Model.Description</p>
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-success">Добавить в корзину</a>
 
-            <p><a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-success">Добавить в корзину</a></p>
+                <a asp-controller="Home" class="btn btn-primary">Продолжить покупки</a>
 
-            <a asp-controller="Home" class="btn btn-primary">Продолжить покупки</a>
+                <a asp-controller="WatchList" asp-action="Add" asp-route-productId="@Model.Id" class="btn btn-danger">Добавить в избранное</a>
+            </div>
         </div>
     </div>
 </div>

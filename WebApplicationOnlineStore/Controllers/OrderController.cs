@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using OnlineShop.Db.Models;
+using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly ICarts cartsRepository;
 
-        private readonly IUsers usersRepository;
-
         private readonly IOrders ordersRepository;
-        public OrderController(ICarts cartsRepository, IUsers usersRepository, IOrders ordersRepository)
+        public OrderController(ICarts cartsRepository, IOrders ordersRepository)
         {
             this.cartsRepository = cartsRepository;
-            this.usersRepository = usersRepository;
             this.ordersRepository = ordersRepository;
         }
 
@@ -28,21 +30,21 @@ namespace WebApplicationOnlineStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy(DeliveryOrderForm form)
+        public IActionResult Buy(DeliveryOrderFormViewModel form)
         {
             if(ModelState.IsValid)
             {
-                var existingCart = cartsRepository.TryGetByUserId(usersRepository.UserId);
+                var existingCart = cartsRepository.TryGetByUserId(Constants.UserId);
 
-                var order = new Order
+                var orderDb = new Order
                 {
-                    Form = form,
-                    OrderItems = existingCart.Items
+                    Form = form.ToDeliveryOrderForm(),
+                    Items = existingCart.Items,
                 };
 
-                ordersRepository.Add(order);
+                ordersRepository.Add(orderDb);
 
-                cartsRepository.Clear(usersRepository.UserId);
+                cartsRepository.Clear(Constants.UserId);
 
                 return RedirectToAction(nameof(Index));
             }

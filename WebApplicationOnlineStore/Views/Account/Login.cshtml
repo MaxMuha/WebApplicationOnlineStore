@@ -6,6 +6,8 @@
 
             <div asp-validation-summary="ModelOnly" class="text-danger font-weight-bold"></div>
 
+            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+
             <label class="form-label fs-2">Войти</label>
 
             <div>
@@ -19,11 +21,11 @@
             </div><br>
 
             <p>
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" value="true" name="rememberMe">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" value="true" name="RememberMe">
                 <label class="form-check-label" for="exampleCheck1">Запомнить меня</label>
             </p>
 
-            <p><button type="submit" class="btn btn-success">Войти</button></p>
+            <p><button type="submit" class="btn btn-success" asp-controller="Account" asp-action="Login">Войти</button></p>
         </div>
     </div>
     <div class="row text-md-center container justify-content-center">

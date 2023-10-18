@@ -1,4 +1,4 @@
-﻿@model Cart
+﻿@model CartViewModel
 @{
     ViewData["Title"] = "Cart page";
 }
@@ -37,7 +37,7 @@ else
                             {
                                 <tr>
                                     <th scope="row">@(Model.Items.IndexOf(cartItem) + 1)</th>
-                                    <td><img class="img-fluid rounded-start" alt="Наушники" src="@cartItem.Product.ImgLink" width="50"></td>
+                                    <td><img class="img-fluid rounded-start" alt="Наушники" src="@cartItem.Product.ImagePath" width="50"></td>
                                     <td>@cartItem.Product.Name</td>
                                     <td>@cartItem.Quantity</td>
                                     <td>@cartItem.Amount руб</td>

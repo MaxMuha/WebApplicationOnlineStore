@@ -1,22 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using WebApplicationOnlineStore.Helpers;
 
 namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsComponent
 {
     public class CartViewComponent : ViewComponent
     {
         private readonly ICarts cartsRepository;
-        private readonly IUsers usersRepository;
-        public CartViewComponent(ICarts cartsRepository, IUsers usersRepository)
+        public CartViewComponent(ICarts cartsRepository)
         {
             this.cartsRepository = cartsRepository;
-            this.usersRepository = usersRepository;
         }
 
         public IViewComponentResult Invoke()
         {
-            var cart = cartsRepository.TryGetByUserId(usersRepository.UserId);
+            var cartDb = cartsRepository.TryGetByUserId(Constants.UserId);
 
-            var productCounts = cart?.Quantity;
+            var cartViewModel = cartDb.ToCartViewModel();
+
+            var productCounts = cartViewModel?.Quantity ?? 0;
 
             return View("Cart", productCounts);
         }

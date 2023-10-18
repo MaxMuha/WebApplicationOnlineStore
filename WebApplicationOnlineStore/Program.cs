@@ -1,29 +1,51 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using OnlineShop.Db;
+using OnlineShop.Db.Models;
 using Serilog;
 using System.Globalization;
 using WebApplicationOnlineStore;
-using WebApplicationOnlineStore.Models;
+using WebApplicationOnlineStore.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration)
                                                                  .Enrich.FromLogContext()
                                                                  .Enrich.WithProperty("ApplicationName", "OnlineShop#1"));
-
 // Add services to the container.
 
-builder.Services.AddSingleton<IUsers, Constants>();
+// Получаем строку подключения из файла конфигурации
+string connection = builder.Configuration.GetConnectionString("online_shop");
 
-builder.Services.AddSingleton<ICarts, CartsRepository>();
+// Добавляем контекст DatabaseContext в качестве сервиса в приложение
+builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connection));
 
-builder.Services.AddSingleton<IRoles, RolesRepository>();
+builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlServer(connection));
 
-builder.Services.AddSingleton<IOrders, OrdersRepository>();
+builder.Services.AddIdentity<User, IdentityRole>() // указываю тип пользователя и роль
+    .AddEntityFrameworkStores<IdentityContext>();  // устанавливаю тип хранилища данных
+// настройки куки
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromHours(5);
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.Cookie = new CookieBuilder
+    {
+        IsEssential = true
+    };
+});
 
-builder.Services.AddSingleton<IUserManager, UserManager>();
+builder.Services.AddScoped<ImagesProvider>();
 
-builder.Services.AddSingleton<IProducts, ProductsRepository>();
+builder.Services.AddTransient<ICarts, CartsDbRepository>();
+
+builder.Services.AddTransient<IOrders, OrdersDbRepository>();
+
+builder.Services.AddTransient<IProducts, ProductsDbRepository>();
+
+builder.Services.AddTransient<IWatchList, WatchListDbRepository>();
 
 builder.Services.AddControllersWithViews();
 
@@ -56,7 +78,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication(); // подключение аутентификации
+
+app.UseAuthorization(); //подключение авторизации
 
 app.UseRequestLocalization();
 
@@ -67,5 +91,13 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var serviceScope = app.Services.CreateScope())
+{
+    var services = serviceScope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<User>>();
+    var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    IdentityInitializer.Initialize(userManager, rolesManager);
+}
 
 app.Run();

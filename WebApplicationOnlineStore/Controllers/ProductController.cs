@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Db;
+using WebApplicationOnlineStore.Helpers;
 
 namespace WebApplicationOnlineStore.Controllers
 {
@@ -9,11 +11,11 @@ namespace WebApplicationOnlineStore.Controllers
         {
             this.productsRepository = productsRepository;
         }
-        public IActionResult Index(Guid id)
+        public IActionResult Index(Guid productId)
         {
-            var product = productsRepository.TryGetById(id);
+            var product = productsRepository.TryGetById(productId);
 
-            return View(product);
+            return View(product.ToProductViewModel());
         }
     }
 }
