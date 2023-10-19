@@ -13,11 +13,12 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class UserController : Controller
     {
-        private readonly RoleManager<IdentityRole> rolesManager;
 
         private readonly UserManager<User> userManager;
 
         private readonly SignInManager<User> signInManager;
+
+        private readonly RoleManager<IdentityRole> rolesManager;
         public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> rolesManager)
         {
             this.userManager = userManager;
