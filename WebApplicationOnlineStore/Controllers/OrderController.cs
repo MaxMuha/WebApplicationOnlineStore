@@ -34,7 +34,7 @@ namespace WebApplicationOnlineStore.Controllers
         {
             if(ModelState.IsValid)
             {
-                var existingCart = cartsRepository.TryGetByUserId(Constants.UserId);
+                var existingCart = cartsRepository.TryGetByUserId(User.Identity.Name);
 
                 var orderDb = new Order
                 {
@@ -44,7 +44,7 @@ namespace WebApplicationOnlineStore.Controllers
 
                 ordersRepository.Add(orderDb);
 
-                cartsRepository.Clear(Constants.UserId);
+                cartsRepository.Clear(User.Identity.Name);
 
                 return RedirectToAction(nameof(Index));
             }

@@ -13,7 +13,7 @@ namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsCompone
 
         public IViewComponentResult Invoke()
         {
-            var productCounts = watchListRepository.GetAll(Constants.UserId).Count();
+            var productCounts = watchListRepository.GetAll(User.Identity.Name).Count();
 
             return View("WatchList", productCounts);
         }

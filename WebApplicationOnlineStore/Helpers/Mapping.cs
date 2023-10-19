@@ -12,7 +12,7 @@ namespace WebApplicationOnlineStore.Helpers
             var productsViewModels = new List<ProductViewModel>();
             foreach (var product in products)
             {
-                productsViewModels.Add(ToProductViewModel(product));
+                productsViewModels.Add(product.ToProductViewModel());
             }
             return productsViewModels;
         }
