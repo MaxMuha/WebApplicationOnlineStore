@@ -13,11 +13,12 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class UserController : Controller
     {
-        private readonly RoleManager<IdentityRole> rolesManager;
 
         private readonly UserManager<User> userManager;
 
         private readonly SignInManager<User> signInManager;
+
+        private readonly RoleManager<IdentityRole> rolesManager;
         public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> rolesManager)
         {
             this.userManager = userManager;
@@ -51,9 +52,9 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
                 var result = userManager.CreateAsync(user, register.Password).Result;
                 if (result.Succeeded)
                 {
-                    //установка куки
-                    signInManager.SignInAsync(user, false).Wait();
-                    return Redirect(register.ReturnUrl ?? "/Admin/Home");
+                    //signInManager.SignInAsync(user, false).Wait();
+                    TryAssignUserRole(user);
+                    return Redirect(register.ReturnUrl ?? "/Admin/User");
                 }
                 else
                 {
@@ -64,6 +65,18 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
                 }
             }
             return View(register);
+        }
+
+        public void TryAssignUserRole(User user)
+        {
+            try
+            {
+                userManager.AddToRoleAsync(user, Constants.UserRoleName).Wait();
+            }
+            catch
+            {
+                //log
+            }
         }
 
         public IActionResult Details(string name)

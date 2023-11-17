@@ -19,7 +19,7 @@ namespace OnlineShop.Db
             }
             if (userManager.FindByNameAsync(adminEmail).Result == null)
             {
-                var admin = new User { Email = adminEmail, UserName = adminEmail };
+                var admin = new User { Email = adminEmail, UserName = adminEmail, AvatarPath = "/images/Profiles/BIG.png" };
                 var result = userManager.CreateAsync(admin, adminPassword).Result;
                 if(result.Succeeded)
                 {

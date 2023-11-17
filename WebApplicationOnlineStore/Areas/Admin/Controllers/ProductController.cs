@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
 using WebApplicationOnlineStore.Areas.Admin.Models;
 using WebApplicationOnlineStore.Helpers;
-using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Areas.Admin.Controllers
 {
@@ -29,6 +28,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(CreateProductViewModel product)
         {
@@ -49,6 +49,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             var product = productsRepository.TryGetById(productId);
             return View(product.ToEditProductViewModel());
         }
+
         [HttpPost]
         public IActionResult Edit(EditProductViewModel product)
         {

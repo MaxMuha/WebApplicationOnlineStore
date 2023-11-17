@@ -2,7 +2,7 @@
 using OnlineShop.Db;
 using WebApplicationOnlineStore.Helpers;
 
-namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsComponent
+namespace WebApplicationOnlineStore.Views.Shared.Components.Cart.CartViewComponent
 {
     public class CartViewComponent : ViewComponent
     {
@@ -14,7 +14,7 @@ namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsCompone
 
         public IViewComponentResult Invoke()
         {
-            var cartDb = cartsRepository.TryGetByUserId(Constants.UserId);
+            var cartDb = cartsRepository.TryGetByUserId(User.Identity.Name);
 
             var cartViewModel = cartDb.ToCartViewModel();
 

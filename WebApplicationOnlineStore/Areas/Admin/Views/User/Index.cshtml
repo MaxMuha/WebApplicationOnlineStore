@@ -27,7 +27,7 @@
                         <tr>
                             <th scope="row">@(Model.IndexOf(user) + 1)</th>
                             <td>@user.Name</td>
-                            <td>@user.Role</td>
+                            <td>@* @user.Role *@</td>
                             <td></td>
                             <td><a asp-area="Admin" asp-controller="User" asp-action="Details" asp-route-name="@user.Name" class="btn btn-primary">Изменить</a></td>
                         </tr>

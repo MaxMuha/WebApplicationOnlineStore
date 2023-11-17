@@ -29,14 +29,14 @@ namespace OnlineShop.Db
             databaseContext.SaveChanges();
         }
 
-        public List<Product> GetAll(string userId) 
+        public List<Product> GetAll(string userId)
         {
-            return databaseContext.WatchLists.Where(x=>x.UserId == userId).Include(x=>x.Product).Select(x => x.Product).ToList();
+            return databaseContext.WatchLists.Where(x => x.UserId == userId).Include(x => x.Product).ThenInclude(x => x.Images).Select(x => x.Product).ToList();
         }
 
         public void Remove(string userId, Guid productId)
         {
-            var removeWatchListProduct = databaseContext.WatchLists.FirstOrDefault(x =>x.UserId == userId && x.Product.Id == productId);
+            var removeWatchListProduct = databaseContext.WatchLists.FirstOrDefault(x => x.UserId == userId && x.Product.Id == productId);
             databaseContext.WatchLists.Remove(removeWatchListProduct);
             databaseContext.SaveChanges();
         }

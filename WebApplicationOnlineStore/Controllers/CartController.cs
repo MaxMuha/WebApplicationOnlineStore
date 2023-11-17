@@ -18,19 +18,19 @@ namespace WebApplicationOnlineStore.Controllers
         }
         public IActionResult Index()
         {
-            var cart = cartsRepository.TryGetByUserId(Constants.UserId);
+            var cart = cartsRepository.TryGetByUserId(User.Identity.Name);
             return View(cart.ToCartViewModel());
         }
         public IActionResult Add(Guid productId)
         {
             var product = productsRepository.TryGetById(productId);
-            cartsRepository.Add(product, Constants.UserId);
+            cartsRepository.Add(product, User.Identity.Name);
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Remove(Guid productId)
         {
             var product = productsRepository.TryGetById(productId);
-            cartsRepository.Remove(product, Constants.UserId);
+            cartsRepository.Remove(product, User.Identity.Name);
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Clear(string userId)

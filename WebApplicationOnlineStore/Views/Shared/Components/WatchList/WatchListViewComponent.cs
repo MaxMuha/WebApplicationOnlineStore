@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
 
-namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsComponent
+namespace WebApplicationOnlineStore.Views.Shared.Components.Watch.WatchViewComponent
 {
     public class WatchListViewComponent : ViewComponent
     {
@@ -13,7 +13,7 @@ namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsCompone
 
         public IViewComponentResult Invoke()
         {
-            var productCounts = watchListRepository.GetAll(Constants.UserId).Count();
+            var productCounts = watchListRepository.GetAll(User.Identity.Name).Count();
 
             return View("WatchList", productCounts);
         }

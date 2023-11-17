@@ -1,0 +1,36 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Profile page";
+}
+<div class="container overflow-hidden text-center">
+    <div class="row">
+        <div class="col-2 ps-0">
+            <div>@await Html.PartialAsync("ProfileMenu")</div>
+        </div>
+        <div class="col-10 p-0">
+            <div class="row text-md-center text-white container justify-content-center mb-3">
+                <div class="shadow bg-secondary col-md-3 rounded-4">
+
+                    <h1 class="title fs-5">Профиль</h1>
+                    <div>
+
+                        <div>
+                            <input asp-for="Name" value="@Model.Name" class="form-control" />
+                            <span asp-validation-for="Name"></span>
+                        </div><br>
+
+                        <div>
+                            <input type="hidden" asp-for="@Model.AvatarPath" value="@Model.AvatarPath" />
+                            <label class="form-label">Аватарка</label>
+                            <div>
+                                <img src="@Model.AvatarPath" width="100" alt="Изображение товара">
+                            </div>
+                        </div><br>
+
+                        <p><a asp-area="" asp-controller="Account" asp-action="Edit" asp-route-name="@Model.Name" class="btn btn-primary">Редактировать</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

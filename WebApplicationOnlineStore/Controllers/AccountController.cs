@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
 using OnlineShop.Db.Models;
+using System.Linq;
+using WebApplicationOnlineStore.Helpers;
 using WebApplicationOnlineStore.Models;
 
 namespace WebApplicationOnlineStore.Controllers
@@ -11,10 +13,19 @@ namespace WebApplicationOnlineStore.Controllers
         private readonly UserManager<User> userManager;
 
         private readonly SignInManager<User> signInManager;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+
+        private readonly ImagesProvider imagesProvider;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ImagesProvider imagesProvider)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.imagesProvider = imagesProvider;
+        }
+
+        public IActionResult Index()
+        {
+            var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+            return View(user.ToUserViewModel());
         }
 
         public IActionResult Login(string returnUrl)
@@ -35,7 +46,7 @@ namespace WebApplicationOnlineStore.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправельный пароль!");
+                    ModelState.AddModelError("", "Неправильный пароль!");
                 }
             }
 
@@ -57,7 +68,7 @@ namespace WebApplicationOnlineStore.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = new User { Email = register.UserName,  UserName = register.UserName };
+                var user = new User { Email = register.UserName,  UserName = register.UserName, AvatarPath = "/images/Profiles/BIG.png" };
                 //добавил пользователя
                 var result = userManager.CreateAsync(user, register.Password).Result;
                 if (result.Succeeded)
@@ -94,6 +105,36 @@ namespace WebApplicationOnlineStore.Controllers
         {
             signInManager.SignOutAsync().Wait();
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        public IActionResult Edit(string name)
+        {
+            var user = userManager.FindByNameAsync(name).Result;
+            return View(user.ToUserViewModel());
+        }
+
+        [HttpPost]
+        public IActionResult Edit(UserViewModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                var imagePath = imagesProvider.SafeFile(user.UploadedFile, ImageFolders.Profiles);
+
+                var existingUser = userManager.FindByNameAsync(User.Identity.Name).Result;
+
+                existingUser.Update(imagePath);
+
+                userManager.UpdateAsync(existingUser).Wait();
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View(user);
+        }
+
+        public IActionResult AvatarPath()
+        {
+            var avatarPath = userManager.FindByNameAsync(User.Identity.Name).Result.AvatarPath;
+            return Content(avatarPath);
         }
     }
 }
