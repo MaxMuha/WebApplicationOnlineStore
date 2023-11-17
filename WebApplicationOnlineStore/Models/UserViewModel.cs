@@ -15,7 +15,10 @@ namespace WebApplicationOnlineStore.Models
         [PasswordPropertyText]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Роль не указанна")]
-        public RoleViewModel Role { get; set; }
+        //[Required(ErrorMessage = "Роль не указанна")]
+        //public RoleViewModel Role { get; set; }
+
+        public string AvatarPath { get; set; }
+        public IFormFile UploadedFile { get; set; }
     }
 }

@@ -20,8 +20,8 @@
                             <input type="hidden" asp-for="Password" value="@Model.Password" />
                             <span asp-validation-for="Password"></span>
 
-                            <input type="hidden" asp-for="Role.Name" value="@Model?.Role" />
-                            <span asp-validation-for="Role.Name"></span>
+                            @* <input type="hidden" asp-for="Role.Name" value="@Model?.Role" />
+                            <span asp-validation-for="Role.Name"></span> *@
 
                             <div>
                                 <input asp-for="Name" value="@Model.Name" class="form-control" />

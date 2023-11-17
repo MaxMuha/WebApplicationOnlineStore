@@ -2,7 +2,7 @@
 using OnlineShop.Db;
 using WebApplicationOnlineStore.Helpers;
 
-namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsComponent
+namespace WebApplicationOnlineStore.Views.Shared.Components.Cart.CartViewComponent
 {
     public class CartViewComponent : ViewComponent
     {

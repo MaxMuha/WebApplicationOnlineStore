@@ -171,7 +171,8 @@ namespace WebApplicationOnlineStore.Helpers
             return new UserViewModel
             {
                 Name = user.UserName,
-                Password = user.PasswordHash
+                Password = user.PasswordHash,
+                AvatarPath = user.AvatarPath,
             };
         }
 
@@ -180,7 +181,14 @@ namespace WebApplicationOnlineStore.Helpers
             return new User
             {
                 UserName = user.Name,
+                AvatarPath = user.AvatarPath
             };
+        }
+
+        public static User Update(this User user, string imagePath = null)
+        {
+            user.AvatarPath = imagePath ?? user.AvatarPath;
+            return user;
         }
 
         public static List<RoleViewModel> ToRoleViewModels(this List<IdentityRole> roles)

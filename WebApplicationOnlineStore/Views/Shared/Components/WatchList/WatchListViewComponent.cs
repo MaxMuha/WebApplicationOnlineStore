@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Db;
 
-namespace WebApplicationOnlineStore.Views.Shared.ViewsComponent.CartViewsComponent
+namespace WebApplicationOnlineStore.Views.Shared.Components.Watch.WatchViewComponent
 {
     public class WatchListViewComponent : ViewComponent
     {
