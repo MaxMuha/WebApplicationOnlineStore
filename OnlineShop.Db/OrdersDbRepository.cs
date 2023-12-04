@@ -14,7 +14,7 @@ namespace OnlineShop.Db
 
         public async Task AddAsync(Order order)
         {
-            await databaseContext.Orders.AddAsync(order);
+            databaseContext.Orders.Add(order);
             await databaseContext.SaveChangesAsync();
         }
         public async Task<List<Order>> GetAllAsync()
