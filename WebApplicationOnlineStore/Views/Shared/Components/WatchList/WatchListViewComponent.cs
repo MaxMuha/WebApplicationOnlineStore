@@ -11,11 +11,11 @@ namespace WebApplicationOnlineStore.Views.Shared.Components.Watch.WatchViewCompo
             this.watchListRepository = watchListRepository;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var productCounts = watchListRepository.GetAll(User.Identity.Name).Count();
+            var productCounts = await watchListRepository.GetAllAsync(User.Identity.Name);
 
-            return View("WatchList", productCounts);
+            return View("WatchList", productCounts.Count());
         }
     }
 }

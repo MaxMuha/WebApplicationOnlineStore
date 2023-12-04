@@ -18,9 +18,9 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             this.imagesProvider = imagesProvider;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = productsRepository.GetAll();
+            var products = await productsRepository.GetAllAsync();
             return View(products.ToProductViewModels());
         }
 
@@ -30,7 +30,7 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateProductViewModel product)
+        public async Task<IActionResult> CreateAsync(CreateProductViewModel product)
         {
             if (!ModelState.IsValid)
             {
@@ -39,19 +39,19 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
 
             var imagesPaths = imagesProvider.SafeFiles(product.UploadedFiles, ImageFolders.Products);
 
-            productsRepository.Add(product.ToProduct(imagesPaths));
+            await productsRepository.AddAsync(product.ToProduct(imagesPaths));
 
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Edit(Guid productId)
+        public async Task<IActionResult> EditAsync(Guid productId)
         {
-            var product = productsRepository.TryGetById(productId);
+            var product = await productsRepository.TryGetByIdAsync(productId);
             return View(product.ToEditProductViewModel());
         }
 
         [HttpPost]
-        public IActionResult Edit(EditProductViewModel product)
+        public async Task<IActionResult> EditAsync(EditProductViewModel product)
         {
             if (!ModelState.IsValid)
             {
@@ -59,14 +59,14 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             }
             var addedImagesPaths = imagesProvider.SafeFiles(product.UploadedFiles, ImageFolders.Products);
             product.ImagesPaths = addedImagesPaths;
-            productsRepository.Update(product.ToProduct());
+            await productsRepository.UpdateAsync(product.ToProduct());
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Remove(Guid productId)
+        public async Task<IActionResult> RemoveAsync(Guid productId)
         {
-            var product = productsRepository.TryGetById(productId);
-            productsRepository.Remove(product);
+            var product = await productsRepository.TryGetByIdAsync(productId);
+            await productsRepository.RemoveAsync(product);
             return RedirectToAction(nameof(Index));
         }
     }

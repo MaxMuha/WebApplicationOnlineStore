@@ -6,39 +6,34 @@ namespace OnlineShop.Db
     public class WatchListDbRepository : IWatchList
     {
         private readonly DatabaseContext databaseContext;
-
         public WatchListDbRepository(DatabaseContext databaseContext)
         {
             this.databaseContext = databaseContext;
         }
-
-        public void Add(string userId, Product product)
+        public async Task AddAsync(string userId, Product product)
         {
-            var existingProdcut = databaseContext.WatchLists.FirstOrDefault(x => x.UserId == userId && x.Product.Id == product.Id);
+            var existingProdcut = await databaseContext.WatchLists.FirstOrDefaultAsync(x => x.UserId == userId && x.Product.Id == product.Id);
             if (existingProdcut == null)
             {
                 databaseContext.WatchLists.Add(new WatchList { Product = product, UserId = userId });
-                databaseContext.SaveChanges();
+                await databaseContext.SaveChangesAsync();
             }
         }
-
-        public void Clear(string userId)
+        public async Task ClearAsync(string userId)
         {
-            var userWatchList = databaseContext.WatchLists.Where(x => x.UserId == userId).ToList();
+            var userWatchList = await databaseContext.WatchLists.Where(x => x.UserId == userId).ToListAsync();
             databaseContext.WatchLists.RemoveRange(userWatchList);
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
-
-        public List<Product> GetAll(string userId)
+        public async Task<List<Product>> GetAllAsync(string userId)
         {
-            return databaseContext.WatchLists.Where(x => x.UserId == userId).Include(x => x.Product).ThenInclude(x => x.Images).Select(x => x.Product).ToList();
+            return await databaseContext.WatchLists.Where(x => x.UserId == userId).Include(x => x.Product).ThenInclude(x => x.Images).Select(x => x.Product).ToListAsync();
         }
-
-        public void Remove(string userId, Guid productId)
+        public async Task RemoveAsync(string userId, Guid productId)
         {
-            var removeWatchListProduct = databaseContext.WatchLists.FirstOrDefault(x => x.UserId == userId && x.Product.Id == productId);
+            var removeWatchListProduct = await databaseContext.WatchLists.FirstOrDefaultAsync(x => x.UserId == userId && x.Product.Id == productId);
             databaseContext.WatchLists.Remove(removeWatchListProduct);
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
     }
 }

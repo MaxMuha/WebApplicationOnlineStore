@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineShop.Db;
 using System.Data;
 using WebApplicationOnlineStore.Areas.Admin.Models;
@@ -18,9 +19,9 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
         {
             this.rolesManager = rolesManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var roles = rolesManager.Roles.ToList();
+            var roles = await rolesManager.Roles.ToListAsync();
             return View(roles.ToRoleViewModels());
         }
         public IActionResult Add()
@@ -28,9 +29,9 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Add(RoleViewModel role)
+        public async Task<IActionResult> AddAsync(RoleViewModel role)
         {
-            var result = rolesManager.CreateAsync(new IdentityRole(role.Name)).Result;
+            var result = await rolesManager.CreateAsync(new IdentityRole(role.Name));
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(Index));
@@ -44,12 +45,12 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
             }
             return View(role);
         }
-        public IActionResult Remove(string name)
+        public async Task<IActionResult> RemoveAsync(string name)
         {
-            var role = rolesManager.FindByNameAsync(name).Result;
+            var role = await rolesManager.FindByNameAsync(name);
             if(role != null)
             {
-                rolesManager.DeleteAsync(role).Wait();
+                await rolesManager.DeleteAsync(role);
             }
             return RedirectToAction(nameof(Index));
         }

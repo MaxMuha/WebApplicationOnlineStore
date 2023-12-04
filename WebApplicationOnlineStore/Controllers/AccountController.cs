@@ -22,9 +22,9 @@ namespace WebApplicationOnlineStore.Controllers
             this.imagesProvider = imagesProvider;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
             return View(user.ToUserViewModel());
         }
 
@@ -34,11 +34,11 @@ namespace WebApplicationOnlineStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(Login login)
+        public async Task<IActionResult> LoginAsync(Login login)
         {
             if (ModelState.IsValid)
             {
-                var result = signInManager.PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, false).Result;
+                var result = await signInManager.PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, false);
 
                 if (result.Succeeded)
                 {
@@ -59,7 +59,7 @@ namespace WebApplicationOnlineStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(Register register)
+        public async Task<IActionResult> RegisterAsync(Register register)
         {
             if (register.UserName == register.Password)
             {
@@ -70,12 +70,12 @@ namespace WebApplicationOnlineStore.Controllers
             {
                 var user = new User { Email = register.UserName,  UserName = register.UserName, AvatarPath = "/images/Profiles/BIG.png" };
                 //добавил пользователя
-                var result = userManager.CreateAsync(user, register.Password).Result;
+                var result = await userManager.CreateAsync(user, register.Password);
                 if (result.Succeeded)
                 {
                     //установка куки
-                    signInManager.SignInAsync(user, false).Wait();
-                    TryAssignUserRole(user);
+                    await signInManager.SignInAsync(user, false);
+                    await TryAssignUserRoleAsync(user);
                     return Redirect(register.ReturnUrl ?? "/Home");
                 }
                 else
@@ -89,11 +89,11 @@ namespace WebApplicationOnlineStore.Controllers
             return View(register);
         }
 
-        public void TryAssignUserRole(User user)
+        public async Task TryAssignUserRoleAsync(User user)
         {
             try
             {
-                userManager.AddToRoleAsync(user, Constants.UserRoleName).Wait();
+                await userManager.AddToRoleAsync(user, Constants.UserRoleName);
             }
             catch
             {
@@ -101,40 +101,40 @@ namespace WebApplicationOnlineStore.Controllers
             }
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> LogoutAsync()
         {
-            signInManager.SignOutAsync().Wait();
+            await signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public IActionResult Edit(string name)
+        public async Task<IActionResult> EditAsync(string name)
         {
-            var user = userManager.FindByNameAsync(name).Result;
+            var user = await userManager.FindByNameAsync(name);
             return View(user.ToUserViewModel());
         }
 
         [HttpPost]
-        public IActionResult Edit(UserViewModel user)
+        public async Task<IActionResult> EditAsync(UserViewModel user)
         {
             if (ModelState.IsValid)
             {
                 var imagePath = imagesProvider.SafeFile(user.UploadedFile, ImageFolders.Profiles);
 
-                var existingUser = userManager.FindByNameAsync(User.Identity.Name).Result;
+                var existingUser = await userManager.FindByNameAsync(User.Identity.Name);
 
                 existingUser.Update(imagePath);
 
-                userManager.UpdateAsync(existingUser).Wait();
+                await userManager.UpdateAsync(existingUser);
 
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
         }
 
-        public IActionResult AvatarPath()
+        public async Task<IActionResult> AvatarPathAsync()
         {
-            var avatarPath = userManager.FindByNameAsync(User.Identity.Name).Result.AvatarPath;
-            return Content(avatarPath);
+            var avatarPath = await userManager.FindByNameAsync(User.Identity.Name);
+            return Content(avatarPath.AvatarPath);
         }
     }
 }

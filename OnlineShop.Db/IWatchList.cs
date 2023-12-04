@@ -4,10 +4,9 @@ namespace OnlineShop.Db
 {
     public interface IWatchList
     {
-        void Add(string userId, Product product);
-        void Clear(string userId);
-        List<Product> GetAll(string userId);
-        void Remove(string userId, Guid productId);
-
+        Task AddAsync(string userId, Product product);
+        Task ClearAsync(string userId);
+        Task<List<Product>> GetAllAsync(string userId);
+        Task RemoveAsync(string userId, Guid productId);
     };
 }

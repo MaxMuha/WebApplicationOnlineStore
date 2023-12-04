@@ -11,26 +11,26 @@ namespace WebApplicationOnlineStore.Areas.Admin.Controllers
     [Authorize (Roles = Constants.AdminRoleName)]
     public class OrderController : Controller
     {
-
         private readonly IOrders ordersRepository;
         public OrderController(IOrders ordersRepository)
         {
             this.ordersRepository = ordersRepository;
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var orders = ordersRepository.GetAll();
+            int idThreadBefore = Thread.CurrentThread.ManagedThreadId;
+            var orders = await ordersRepository.GetAllAsync();
+            int idThreadAfter = Thread.CurrentThread.ManagedThreadId;
             return View(orders.ToOrderViewModels());
         }
-        public IActionResult Details(Guid orderId)
+        public async Task<IActionResult> DetailsAsync(Guid orderId)
         {
-            var order = ordersRepository.TryGetById(orderId);
+            var order = await ordersRepository.TryGetByIdAsync(orderId);
             return View(order.ToOrderViewModel());
         }
-        public IActionResult UpdateStatus(Guid orderId, OrderStatusViewModels status)
+        public async Task<IActionResult> UpdateStatusAsync(Guid orderId, OrderStatusViewModels status)
         {
-            ordersRepository.UpdateStatus(orderId, (OrderStatus)(int)status);
+            await ordersRepository.UpdateStatusAsync(orderId, (OrderStatus)(int)status);
             return RedirectToAction(nameof(Index));
         }
     }

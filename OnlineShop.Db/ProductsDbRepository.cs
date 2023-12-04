@@ -12,25 +12,25 @@ namespace OnlineShop.Db
             this.databaseContext = databaseContext;
         }
 
-        public List<Product> GetAll()
+        public async Task<List<Product>> GetAllAsync()
         {
-            return databaseContext.Products.Include(x => x.Images).ToList();
+            return await databaseContext.Products.Include(x => x.Images).ToListAsync();
         }
 
-        public Product TryGetById(Guid id)
+        public async Task<Product> TryGetByIdAsync(Guid id)
         {
-            return databaseContext.Products.Include(x => x.Images).FirstOrDefault(product => product.Id == id);
+            return await databaseContext.Products.Include(x => x.Images).FirstOrDefaultAsync(product => product.Id == id);
         }
 
-        public void Add(Product product)
+        public async Task AddAsync(Product product)
         {
             databaseContext.Products.Add(product);
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
 
-        public void Update(Product product)
+        public async Task UpdateAsync(Product product)
         {
-            var existingProduct = databaseContext.Products.Include(x => x.Images).FirstOrDefault(x => x.Id == product.Id);
+            var existingProduct = await databaseContext.Products.Include(x => x.Images).FirstOrDefaultAsync(x => x.Id == product.Id);
             if (existingProduct == null)
             {
                 return;
@@ -44,13 +44,13 @@ namespace OnlineShop.Db
                 image.ProductId = product.Id;
                 databaseContext.Images.Add(image);
             }
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
 
-        public void Remove(Product product)
+        public async Task RemoveAsync(Product product)
         {
             databaseContext.Products.Remove(product);
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
     }
 }

@@ -4,10 +4,10 @@ namespace OnlineShop.Db
 {
     public interface IProducts
     {
-        void Add(Product product);
-        List<Product> GetAll();
-        void Remove(Product product);
-        Product TryGetById(Guid id);
-        void Update(Product product);
+        Task AddAsync(Product product);
+        Task<List<Product>> GetAllAsync();
+        Task RemoveAsync(Product product);
+        Task<Product> TryGetByIdAsync(Guid id);
+        Task UpdateAsync(Product product);
     }
 }

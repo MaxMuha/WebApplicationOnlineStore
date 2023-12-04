@@ -12,29 +12,29 @@ namespace OnlineShop.Db
             this.databaseContext = databaseContext;
         }
 
-        public void Add(Order order)
+        public async Task AddAsync(Order order)
         {
-            databaseContext.Orders.Add(order);
-            databaseContext.SaveChanges();
+            await databaseContext.Orders.AddAsync(order);
+            await databaseContext.SaveChangesAsync();
         }
-        public List<Order>? GetAll()
+        public async Task<List<Order>> GetAllAsync()
         {
-            return databaseContext.Orders.Include(x => x.Form).Include(x => x.Items).ThenInclude(x => x.Product).ToList();
-        }
-
-        public Order TryGetById(Guid orderId)
-        {
-            return databaseContext.Orders.Include(x => x.Form).Include(x => x.Items).ThenInclude(x => x.Product).FirstOrDefault(o => o.Id == orderId);
+            return await databaseContext.Orders.Include(x => x.Form).Include(x => x.Items).ThenInclude(x => x.Product).ToListAsync();
         }
 
-        public void UpdateStatus(Guid orderId, OrderStatus newStatus)
+        public async Task<Order> TryGetByIdAsync(Guid orderId)
         {
-            var order = TryGetById(orderId);
+            return await databaseContext.Orders.Include(x => x.Form).Include(x => x.Items).ThenInclude(x => x.Product).FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
+        public async Task UpdateStatusAsync(Guid orderId, OrderStatus newStatus)
+        {
+            var order = await TryGetByIdAsync(orderId);
             if(order != null)
             {
                 order.Status = newStatus;
             }
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
     }
 }

@@ -14,9 +14,9 @@ namespace WebApplicationOnlineStore.Views.Shared.Components.Account.AccountViewC
             this.userManager = userManager;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var userDb = userManager.FindByNameAsync(User.Identity.Name).Result;
+            var userDb = await userManager.FindByNameAsync(User.Identity.Name);
 
             var userAvatar = userDb.AvatarPath;
 

@@ -12,9 +12,9 @@ namespace WebApplicationOnlineStore.Views.Shared.Components.Cart.CartViewCompone
             this.cartsRepository = cartsRepository;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var cartDb = cartsRepository.TryGetByUserId(User.Identity.Name);
+            var cartDb = await cartsRepository.TryGetByUserIdAsync(User.Identity.Name);
 
             var cartViewModel = cartDb.ToCartViewModel();
 

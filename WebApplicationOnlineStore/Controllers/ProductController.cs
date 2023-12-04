@@ -11,9 +11,9 @@ namespace WebApplicationOnlineStore.Controllers
         {
             this.productsRepository = productsRepository;
         }
-        public IActionResult Index(Guid productId)
+        public async Task<IActionResult> Index(Guid productId)
         {
-            var product = productsRepository.TryGetById(productId);
+            var product = await productsRepository.TryGetByIdAsync(productId);
 
             return View(product.ToProductViewModel());
         }

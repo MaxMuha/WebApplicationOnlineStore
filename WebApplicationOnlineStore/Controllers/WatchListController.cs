@@ -16,20 +16,20 @@ namespace WebApplicationOnlineStore.Controllers
             this.productsRepository = productsRepository;
             this.watchListRepository = watchListRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var productsDb = watchListRepository.GetAll(User.Identity.Name);
+            var productsDb = await watchListRepository.GetAllAsync(User.Identity.Name);
             return View(productsDb.ToProductViewModels());
         }
-        public IActionResult Add(Guid productId)
+        public async Task<IActionResult> AddAsync(Guid productId)
         {
-            var product = productsRepository.TryGetById(productId);
-            watchListRepository.Add(User.Identity.Name, product);
+            var product = await productsRepository.TryGetByIdAsync(productId);
+            await watchListRepository.AddAsync(User.Identity.Name, product);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Remove(Guid productId)
+        public async Task<IActionResult> RemoveAsync(Guid productId)
         {
-            watchListRepository.Remove(User.Identity.Name, productId);
+            await watchListRepository.RemoveAsync(User.Identity.Name, productId);
             return RedirectToAction(nameof(Index));
         }
     }

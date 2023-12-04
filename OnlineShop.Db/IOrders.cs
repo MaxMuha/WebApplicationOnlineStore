@@ -4,9 +4,9 @@ namespace OnlineShop.Db
 {
     public interface IOrders
     {
-        void Add(Order order);
-        List<Order>? GetAll();
-        Order TryGetById(Guid orderId);
-        void UpdateStatus(Guid orderId, OrderStatus newStatus);
+        Task AddAsync(Order order);
+        Task<List<Order>> GetAllAsync();
+        Task<Order> TryGetByIdAsync(Guid orderId);
+        Task UpdateStatusAsync(Guid orderId, OrderStatus newStatus);
     }
 }

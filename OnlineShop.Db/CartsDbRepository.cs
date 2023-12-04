@@ -6,19 +6,17 @@ namespace OnlineShop.Db
     public class CartsDbRepository : ICarts
     {
         private readonly DatabaseContext databaseContext;
-
         public CartsDbRepository(DatabaseContext databaseContext)
         {
             this.databaseContext = databaseContext;
         }
-
-        public Cart TryGetByUserId(string userId)
+        public async Task<Cart> TryGetByUserIdAsync(string userId)
         {
-            return databaseContext.Carts.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Images).FirstOrDefault(x => x.UserId == userId);
+            return await databaseContext.Carts.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Images).FirstOrDefaultAsync(x => x.UserId == userId);
         }
-        public void Add(Product product, string userId)
+        public async Task AddAsync(Product product, string userId)
         {
-            var existingCart = TryGetByUserId(userId);
+            var existingCart = await TryGetByUserIdAsync(userId);
             if (existingCart == null)
             {
                 var newCart = new Cart
@@ -53,11 +51,11 @@ namespace OnlineShop.Db
                     });
                 }
             }
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
-        public void Remove(Product product, string userId)
+        public async Task RemoveAsync(Product product, string userId)
         {
-            var existingCart = TryGetByUserId(userId);
+            var existingCart = await TryGetByUserIdAsync(userId);
             var existingCartItem = existingCart.Items.FirstOrDefault(x => x.Product.Id == product.Id);
             if (existingCartItem.Quantity > 1)
             {
@@ -67,14 +65,13 @@ namespace OnlineShop.Db
             {
                 existingCart.Items.Remove(existingCartItem);
             }
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
-
-        public void Clear(string userId)
+        public async Task ClearAsync(string userId)
         {
-            var existingCart = TryGetByUserId(userId);
+            var existingCart = await TryGetByUserIdAsync(userId);
             databaseContext.Carts.Remove(existingCart);
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
     }
 }

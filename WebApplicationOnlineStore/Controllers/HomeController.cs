@@ -11,9 +11,9 @@ namespace WebApplicationOnlineStore.Controllers
         {
             this.productsRepository = productsRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = productsRepository.GetAll();
+            var products = await productsRepository.GetAllAsync();
             return View(products.ToProductViewModels());
         }
     }

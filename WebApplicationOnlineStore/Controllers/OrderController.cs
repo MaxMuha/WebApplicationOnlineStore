@@ -30,11 +30,11 @@ namespace WebApplicationOnlineStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy(DeliveryOrderFormViewModel form)
+        public async Task<IActionResult> BuyAsync(DeliveryOrderFormViewModel form)
         {
             if(ModelState.IsValid)
             {
-                var existingCart = cartsRepository.TryGetByUserId(User.Identity.Name);
+                var existingCart = await cartsRepository.TryGetByUserIdAsync(User.Identity.Name);
 
                 var orderDb = new Order
                 {
@@ -42,9 +42,9 @@ namespace WebApplicationOnlineStore.Controllers
                     Items = existingCart.Items,
                 };
 
-                ordersRepository.Add(orderDb);
+                await ordersRepository.AddAsync(orderDb);
 
-                cartsRepository.Clear(User.Identity.Name);
+                await cartsRepository.ClearAsync(User.Identity.Name);
 
                 return RedirectToAction(nameof(Index));
             }

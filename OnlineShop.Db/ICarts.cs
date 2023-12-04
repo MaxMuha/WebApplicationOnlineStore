@@ -3,9 +3,9 @@ namespace OnlineShop.Db
 {
     public interface ICarts
     {
-        Cart TryGetByUserId(string userId);
-        void Add(Product product, string userId);
-        void Remove(Product product, string userId);
-        void Clear(string userId);
+        Task<Cart> TryGetByUserIdAsync(string userId);
+        Task AddAsync(Product product, string userId);
+        Task RemoveAsync(Product product, string userId);
+        Task ClearAsync(string userId);
     }
 }

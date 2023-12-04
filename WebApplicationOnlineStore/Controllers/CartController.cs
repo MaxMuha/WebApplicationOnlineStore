@@ -16,26 +16,26 @@ namespace WebApplicationOnlineStore.Controllers
             this.productsRepository = productsRepository;
             this.cartsRepository = cartsRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var cart = cartsRepository.TryGetByUserId(User.Identity.Name);
+            var cart = await cartsRepository.TryGetByUserIdAsync(User.Identity.Name);
             return View(cart.ToCartViewModel());
         }
-        public IActionResult Add(Guid productId)
+        public async Task<IActionResult> AddAsync(Guid productId)
         {
-            var product = productsRepository.TryGetById(productId);
-            cartsRepository.Add(product, User.Identity.Name);
+            var product = await productsRepository.TryGetByIdAsync(productId);
+            await cartsRepository.AddAsync(product, User.Identity.Name);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Remove(Guid productId)
+        public async Task<IActionResult> RemoveAsync(Guid productId)
         {
-            var product = productsRepository.TryGetById(productId);
-            cartsRepository.Remove(product, User.Identity.Name);
+            var product = await productsRepository.TryGetByIdAsync(productId);
+            await cartsRepository.RemoveAsync(product, User.Identity.Name);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Clear(string userId)
+        public async Task<IActionResult> ClearAsync(string userId)
         {
-            cartsRepository.Clear(userId);
+            await cartsRepository.ClearAsync(userId);
             return RedirectToAction(nameof(Index));
         }
     }
